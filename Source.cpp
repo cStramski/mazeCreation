@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 4
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2020/2021
+*
+* @author Tsvetan Stramski	
+* @idnumber 62586
+* @compiler VC
+*
+* Core file
+*
+*/
+
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -54,7 +69,7 @@ bool emptySpaceCheck()
 	{
 		for (int j = 0; j < cols-1; j++)
 		{
-			if (maze[i][j]==0&&maze[i][j+1]==0&&maze[i+1][j]==0&&maze[i+1][j+1]==0)
+			if (maze[i][j] == 0 && maze[i][j + 1] == 0 && maze[i + 1][j] == 0 && maze[i + 1][j + 1] == 0)
 			{
 				return false;
 			}
@@ -62,7 +77,7 @@ bool emptySpaceCheck()
 	}
 	return true;
 }
-bool pathCreation(int x,int y,int level)
+bool pathCreation(int x, int y, int level)
 {
 	/*  Returning true if the maze created meets the creteria (no big empty spaces, path from s to e, and level of depth above 30)
 		Each call creates path whit random length to a random direction from the current position                                  */
@@ -118,7 +133,7 @@ bool pathCreation(int x,int y,int level)
 		for (int i = 1; i < length; i++)
 		{
 			
-			if ((y+i)>17)
+			if ((y + i)>17)
 			{
 				break;
 			}
@@ -134,7 +149,7 @@ bool pathCreation(int x,int y,int level)
 	case 4:
 		for (int i = 1; i < length; i++)
 		{
-			if ((x-i) <0)
+			if ((x - i) < 0)
 			{
 				break;
 			}
@@ -155,21 +170,19 @@ bool pathCreation(int x,int y,int level)
 		return false;
 	}
 	//Maze Creteria
-	if ((maze[17][37] == 0 || maze[16][38] == 0) && level >30 )
+	if ((maze[17][37] == 0 || maze[16][38] == 0) && level > 30)
 	{
 		if (emptySpaceCheck())
 		{
-			if (emptySpaceCount>150)
+			if (emptySpaceCount > 150)
 			{
-				cout << emptySpaceCount << endl;
-				//printMaze();
 				return true;
 			}
 		}
 		return false;
 	}
 	//Recursive call whit current position in the maze, whit increased level of depth expecting the value of the root of the recursion.
-	return pathCreation(nextX,nextY,level + 1);
+	return pathCreation(nextX, nextY, level + 1);
 }
 int main()
 {
