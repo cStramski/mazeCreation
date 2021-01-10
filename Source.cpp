@@ -3,15 +3,23 @@
 #include <cstdlib>
 #include <ctime>
 
+//By defenition
 const int rows = 18;
 const int cols = 39;
 int maze[rows][cols] = {};
+//Used only by the recursive calls 
 int emptySpaceCount = 0;
 int lastDirection = 0;
 
 using namespace std;
 void printMaze()
 {
+	//-1 Start
+	//-2 End
+	//0 Empty
+	//1 Wall
+	maze[0][0] = -1;
+	maze[17][38] = -2;
 	cout << string(80, '-') << endl;
 	for (int i = 0; i < rows; i++)
 	{
@@ -22,6 +30,14 @@ void printMaze()
 			{
 				cout << "##";
 			}
+			else if (maze[i][j] == -1)
+			{
+				cout << "S ";
+			}
+			else if (maze[i][j] == -2)
+			{
+				cout << " E";
+			}
 			else
 			{
 				cout << "  ";
@@ -30,11 +46,10 @@ void printMaze()
 		cout << '|' << endl;
 	}
 	cout << string(80, '-') << endl;
-	int a = 5;
-	cin >> a;
 }
 bool emptySpaceCheck()
 {
+	//Checks for open spaces like squares, returns false if there are big empty spaces
 	for (int i = 0; i < rows-1; i++)
 	{
 		for (int j = 0; j < cols-1; j++)
@@ -47,27 +62,33 @@ bool emptySpaceCheck()
 	}
 	return true;
 }
-void pathCreation(int x,int y,int level)
+bool pathCreation(int x,int y,int level)
 {
+	/*  Returning true if the maze created meets the creteria (no big empty spaces, path from s to e, and level of depth above 30)
+		Each call creates path whit random length to a random direction from the current position                                  */
 
 	// 1 - UP
 	// 2 - RIGHT
 	// 3 - DOWN
 	// 4 - LEFT
+
+	//In the maze the open space is marked whit 1 and the empty whit 0
 	int nextX = x;
 	int nextY = y;
-	int direction = (rand() % 4) + 1;
-	int length = (rand() % 10) + 1;
+	int direction = (rand() % 4) + 1; // 1-4
+	int length = (rand() % 10) + 1; //1-10
 	switch (direction)
 	{
 	case 1:
 		for (int i = 1; i < length; i++)
 		{
+			//Out of bounds check
 			if ((y - i )<0)
 			{
 				break;
 			}
 			nextY = y - i;
+			//Useless action check(removing already removed walls)
 			if (maze[nextY][x] == 0)
 			{
 				break;
@@ -77,6 +98,7 @@ void pathCreation(int x,int y,int level)
 		}
 		break;
 	case 2:
+		//Same checks for all directions
 		for (int i = 1; i < length; i++)
 		{			
 			if ((x + i)>38)
@@ -121,37 +143,44 @@ void pathCreation(int x,int y,int level)
 			{
 				break;
 			}
+			//Removing walls and recording their count
 			maze[y][nextX] = 0;
 			emptySpaceCount++;
 		}
 		break;
 	}
-	//cout << direction << "  " << length <<"  "<<level<< endl;
-	//printMaze();
-	if (level == 800)
+	//Stackoverflow protection
+	if (level == 1000)
 	{
-		return;
+		return false;
 	}
+	//Maze Creteria
 	if ((maze[17][37] == 0 || maze[16][38] == 0) && level >30 )
 	{
 		if (emptySpaceCheck())
 		{
-			
-			if (emptySpaceCount>130)
+			if (emptySpaceCount>150)
 			{
 				cout << emptySpaceCount << endl;
-				printMaze();
+				//printMaze();
+				return true;
 			}
 		}
-		return;
+		return false;
 	}
-	pathCreation(nextX,nextY,level + 1);
+	//Recursive call whit current position in the maze, whit increased level of depth expecting the value of the root of the recursion.
+	return pathCreation(nextX,nextY,level + 1);
 }
 int main()
 {
+	//Random seed initialization
 	srand((int)time(0));
-	while (true)
+
+	//Infinite maze creation until one meets all the creteria.
+	bool isReady = false;
+	while (!isReady)
 	{
+		//Reset
 		emptySpaceCount = 0;
 		for (int i = 0; i < rows; i++)
 		{
@@ -160,7 +189,8 @@ int main()
 				maze[i][j] = 1;
 			}
 		}
-		pathCreation(0, 0, 0);
+		//Calling the recursive function whit position (0,0) and level of depth 0
+		isReady = pathCreation(0, 0, 0);
 	}
 	printMaze();
 	return 0;
