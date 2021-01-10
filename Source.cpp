@@ -17,6 +17,8 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+
 
 //By defenition
 const int rows = 18;
@@ -29,38 +31,41 @@ int lastDirection = 0;
 using namespace std;
 void printMaze()
 {
-	//-1 Start
-	//-2 End
-	//0 Empty
-	//1 Wall
-	maze[0][0] = -1;
-	maze[17][38] = -2;
-	cout << string(80, '-') << endl;
+	//If the "maze.txt" is not present it will be created, and it is overwritten everytime.
+	ofstream myfile("maze.txt");
+	maze[0][0] = -1; //Start decleration
+	maze[17][38] = -2; //End deckeratuib
+	myfile << string(80, '-') << endl;
 	for (int i = 0; i < rows; i++)
 	{
-		cout << '|';
+		myfile << '|';
+		//-1 Start
+		//-2 End
+		//0 Empty
+		//1 Wall
 		for (int j = 0; j < cols; j++)
 		{
 			if (maze[i][j] == 1)
 			{
-				cout << "##";
+				myfile << "##";
 			}
 			else if (maze[i][j] == -1)
 			{
-				cout << "S ";
+				myfile << "S ";
 			}
 			else if (maze[i][j] == -2)
 			{
-				cout << " E";
+				myfile << " E";
 			}
 			else
 			{
-				cout << "  ";
+				myfile << "  ";
 			}
 		}
-		cout << '|' << endl;
+		myfile << '|' << endl;
 	}
-	cout << string(80, '-') << endl;
+	myfile << string(80, '-') << endl;
+	myfile.close();
 }
 bool emptySpaceCheck()
 {
