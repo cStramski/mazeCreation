@@ -34,7 +34,7 @@ void printMaze()
 	//If the "maze.txt" is not present it will be created, and it is overwritten everytime.
 	ofstream myfile("maze.txt");
 	maze[0][0] = -1; //Start decleration
-	maze[17][38] = -2; //End deckeratuib
+	maze[17][38] = -2; //End decleration
 	myfile << string(80, '-') << endl;
 	for (int i = 0; i < rows; i++)
 	{
